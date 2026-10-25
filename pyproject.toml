@@ -7,3 +7,4 @@ dependencies = ["mcp==1.30.0", "mcp-proxy==0.13.0"]
 
 [tool.uv]
 package = false
+python-preference = "only-managed"
