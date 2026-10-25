@@ -1,0 +1,24 @@
+name: Python checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+      - run: uv sync --frozen --python 3.11
+      - run: uv run --frozen python -m unittest discover -s tests -v
+      - run: uv run --frozen python -m pipeline.setup --help
+      - run: uv run --frozen python -m pipeline.check --help
+      - run: uv run --frozen python -m pipeline.exchange --help

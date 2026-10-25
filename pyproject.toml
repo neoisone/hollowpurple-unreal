@@ -1,0 +1,9 @@
+[project]
+name = "hollowpurple-unreal"
+version = "0.1.0"
+description = "Claude setup and Blender interchange helpers for Epic's Unreal Engine 5.8 MCP"
+requires-python = ">=3.11,<3.14"
+dependencies = ["mcp==1.30.0", "mcp-proxy==0.13.0"]
+
+[tool.uv]
+package = false
