@@ -51,10 +51,13 @@ def client_entry(client, port, uv=None):
         return {'type': 'http', 'url': url}
     if client != 'desktop' or uv is None:
         raise ValueError('Desktop setup requires the actual uv executable path')
+    environment = {'UV_PYTHON_PREFERENCE': 'only-managed'}
+    if location := os.environ.get('UV_PYTHON_INSTALL_DIR'):
+        environment['UV_PYTHON_INSTALL_DIR'] = str(Path(location).expanduser().resolve())
     return {'command': str(uv), 'args': [
         'run', '--frozen', '--project', str(ROOT), '--python', '3.11',
         'mcp-proxy', '--log-level', 'ERROR', '--transport', 'streamablehttp', url],
-        'env': {'UV_PYTHON_PREFERENCE': 'only-managed'}}
+        'env': environment}
 
 
 def set_ini_values(text, section, values):

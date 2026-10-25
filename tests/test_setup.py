@@ -1,6 +1,7 @@
 """Configuration invariants: preserve Blender, preflight before writes, exact backups."""
 
 import json
+import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -112,6 +113,12 @@ class SetupTests(unittest.TestCase):
         self.assertIn('--frozen', entry['args'])
         self.assertIn('mcp-proxy', entry['args'])
         self.assertEqual(entry['args'][-2:], ['streamablehttp', 'http://127.0.0.1:8123/mcp'])
+
+    def test_desktop_launch_keeps_custom_managed_python_location(self):
+        location = str(self.root / 'Managed Python')
+        with patch.dict(os.environ, {'UV_PYTHON_INSTALL_DIR': location}):
+            entry = setup.client_entry('desktop', 8000, Path('uv'))
+        self.assertEqual(entry['env'].get('UV_PYTHON_INSTALL_DIR'), location)
 
     def test_write_failure_restores_original_files(self):
         original = self.config.read_bytes(), self.project.read_bytes()
